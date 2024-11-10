@@ -30,7 +30,6 @@ const fetchConversations = async () => {
 const selectConversation = (id) => {
   selectedConversationId.value = id
   // Emit event or handle navigation
-  console.log('Selected conversation:', id)
 }
 
 const formatDate = (date) => {

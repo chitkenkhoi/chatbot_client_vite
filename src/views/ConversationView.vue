@@ -147,7 +147,6 @@ export default {
         await scrollToBottom();
       } catch (error) {
         if (error.code === "ERR_CANCELED") {
-          console.log(`Load cancelled for chat ${chatId}`);
         } else {
           console.error(`Error loading chat ${chatId}:`, error);
           state.error = error.message;

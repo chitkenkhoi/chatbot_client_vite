@@ -98,7 +98,8 @@
   import { ref, computed, onMounted, onUnmounted,defineProps } from 'vue'
   import { useRouter } from 'vue-router'
   import axiosInstance from '@/api/axios'
-  
+  import { useChatStore } from '../store'
+  const chatStore = useChatStore()
   const props = defineProps({
     email: {
       type: String,
@@ -167,10 +168,12 @@
   
   const handleLogout = async () => {
     // Add your logout logic here
-    console.log('Logging out...')
     const response = await axiosInstance.get('/logout')
-    console.log(response.data)
-    router.push('/login')
+    if (response.status === 200){
+      router.push('/login')
+      chatStore.resetState()
+    }
+    
   }
   </script>
   

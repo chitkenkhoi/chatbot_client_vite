@@ -10,7 +10,6 @@ export function useWebSocket(chatId) {
         ws.value = new WebSocket(url)
         ws.value.onopen = () => {
             chatStore.isConnected = true
-            console.log('WebSocket connected')
         }
 
         ws.value.onmessage = (event) => {
@@ -21,7 +20,6 @@ export function useWebSocket(chatId) {
 
         ws.value.onclose = () => {
             chatStore.isConnected = false
-            console.log('WebSocket disconnected')
         }
     }
 

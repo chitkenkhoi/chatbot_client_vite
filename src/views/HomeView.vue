@@ -13,7 +13,6 @@
     <div class="sidebar-container"><SideBar ref="sideBarRef" @finish-loading="handleFinishLoading"/></div>
     <AskInputVue
       class="chat"
-      @reply="handleReply"
       :isNew="$route.path === '/new'"
       @newChat="handleNewChat"
     />
@@ -52,9 +51,6 @@ export default defineComponent({
       chat_history: [],
     });
     const router = useRouter();
-    const handleReply = (data) => {
-      console.log(data, "reply");
-    };
     const handleNewChat = (chat) => {
       sideBarRef.value.newChatFunc(chat);
     };
@@ -76,7 +72,7 @@ export default defineComponent({
       await sleep(1000);
       isLoadingAuth.value = false;
     });
-    return { handleReply, sideBarRef, state, handleNewChat, isLoadingAuth,isLoadingSidebar,handleFinishLoading };
+    return { sideBarRef, state, handleNewChat, isLoadingAuth,isLoadingSidebar,handleFinishLoading };
   },
 });
 </script>

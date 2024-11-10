@@ -9,6 +9,9 @@ export const useChatStore = defineStore('chat', {
   }),
 
   actions: {
+    resetState(){
+      this.$reset();
+    },
     loadTopic(topic){
       if (topic){
         this.topic = topic
@@ -26,7 +29,6 @@ export const useChatStore = defineStore('chat', {
         return
       }
       this.topic.unshift({id:chatId,topic:topic,mode:this.mode})
-      console.log(this.topic[0].mode,"mode")
       if (this.topic.length > 8){
         this.topic.pop()
       }
@@ -55,7 +57,6 @@ export const useChatStore = defineStore('chat', {
     handleEnd(chatId){
       const l = this.conversations.get(chatId).length
       this.conversations.get(chatId)[l - 1].isRieceving = false
-      console.log('End')
     },
     handleFinishTyping(chatId){
       const l = this.conversations.get(chatId).length

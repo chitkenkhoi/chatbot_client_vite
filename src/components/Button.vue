@@ -21,7 +21,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const handleClick = () => {
-      console.log("clicked")
       emit("clicked");
     };
 

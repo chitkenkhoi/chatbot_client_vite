@@ -74,7 +74,6 @@ export default {
             }
           );
           if (response.data.message === "success") {
-            console.log("success");
             chatStore.updateConversationOrder(route.params.id);
           }
         }

@@ -121,14 +121,11 @@ export default {
     });
     const handleLogin = async () => {
       state.showPasswordWarning = false;
-      console.log("Email:", state.email);
-      console.log("Password:", state.password);
       try {
         const response = await axiosInstance.post("/login", {
           email: state.email,
           password: state.password,
         });
-        console.log(response.data);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("userName", response.data.userName);
         localStorage.setItem("userEmail", response.data.userEmail);

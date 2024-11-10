@@ -158,10 +158,8 @@ export default {
       state.isOtpError = false
       if (state.otpSent) {
         if (state.otp ==''){
-          console.log("bad")
           return
         } 
-        console.log("Registering with OTP", state.email, state.otp);
         state.isSubmitting = true
         try{
           const formData = new URLSearchParams();
@@ -172,7 +170,6 @@ export default {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           })
-          console.log(response.data)
           localStorage.setItem('userEmail',state.email)
         router.push('/registerAccount')
         } catch(e){
@@ -185,7 +182,6 @@ export default {
         
         
       } else {
-        console.log("Sending OTP to", state.email);
         state.isSendingOtp = true
         state.otp=''
         try{
@@ -210,15 +206,12 @@ export default {
     };
     const toggleShowPassword = ()=>{
       state.showcode = !state.showcode
-      console.log(state.showcode)
     }
     const getCode = (code)=>{
       state.otp = code
-      console.log(code)
     }
     const resendOtp = async () =>{
       if (state.isSendingOtp) {
-        console.log("bad")
         return
       }
       state.otp=''

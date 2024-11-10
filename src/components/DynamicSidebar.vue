@@ -44,7 +44,6 @@ import { ref } from "vue";
 
 export default {
   setup() {
-    console.log("rendered once");
     const conversationList = ref([
       {
         id: "123",
@@ -68,7 +67,6 @@ export default {
     let hideTimeout = null;
 
     const showSidebar = () => {
-      console.log("this is show");
       if (isPinned.value) return;
 
       clearTimeout(hideTimeout);
@@ -76,7 +74,6 @@ export default {
     };
 
     const hideSidebar = () => {
-      console.log("this is hide");
       if (isPinned.value) return;
       hideTimeout = setTimeout(() => {
         isVisible.value = false;

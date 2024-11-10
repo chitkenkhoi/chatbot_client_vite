@@ -25,7 +25,6 @@ export default{
         const data = ref([])
         const realData = ref([])
         const handleClicked = () => {
-            console.log("Button clicked")
             realData.value.push(data.value)
             data.value = ""
         }

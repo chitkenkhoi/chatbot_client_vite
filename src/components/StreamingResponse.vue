@@ -18,7 +18,6 @@
         <!-- Currently typing line -->
         <div v-if="currentLineDisplay">
           {{ currentLineDisplay }}
-          <!-- <span class="cursor" :class="{ 'cursor-blink': isWaiting }">|</span> -->
         </div>
       </template>
     </div>
@@ -26,7 +25,8 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
+import { ref, watch, defineProps, defineEmits, onBeforeUnmount, onMounted } from 'vue';
+
 const emit = defineEmits(['finishTyping']);
 const props = defineProps({
   streamedLines: {
@@ -42,7 +42,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  content:{
+  content: {
     type: String,
     default: ""
   }
@@ -50,48 +50,101 @@ const props = defineProps({
 
 const displayedLines = ref([]);
 const currentLineDisplay = ref('');
-const isTyping = ref(false);
-const isWaiting = ref(true);
 const processingQueue = ref(false);
+const currentIndex = ref(0);
+const currentLineText = ref('');
+const startTime = ref(null);
+const isHidden = ref(false);
+
+// Handle visibility change
+onMounted(() => {
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityChange);
+});
+
+const handleVisibilityChange = () => {
+  isHidden.value = document.hidden;
+  if (!document.hidden) {
+    // When returning to the tab, update display to show what was processed in background
+    updateDisplay();
+  }
+};
+
+function updateDisplay() {
+  if (!currentLineText.value) return;
+  
+  const now = Date.now();
+  const elapsedTime = now - startTime.value;
+  const charactersToShow = Math.floor(elapsedTime / props.typingSpeed);
+  
+  // Update the display to show the correct number of characters
+  currentIndex.value = Math.min(charactersToShow, currentLineText.value.length);
+  currentLineDisplay.value = currentLineText.value.slice(0, currentIndex.value);
+  
+  // If we've completed the current line while in background
+  if (currentIndex.value >= currentLineText.value.length) {
+    displayedLines.value.push(currentLineText.value);
+    currentLineDisplay.value = '';
+    currentLineText.value = '';
+  }
+}
 
 // Watch for new lines being added to streamedLines
 watch(() => props.streamedLines, async (newLines) => {
-  // If typing is disabled, do nothing (template will handle direct display)
   if (!props.enableTyping) return;
-  
-  // If already processing queue, don't start a new process
   if (processingQueue.value) return;
   
   try {
     processingQueue.value = true;
-    
-    while (displayedLines.value.length < newLines.length) {
-      const nextLineIndex = displayedLines.value.length;
-      const nextLine = newLines[nextLineIndex];
-      
-      isWaiting.value = false;
-      isTyping.value = true;
-      
-      await typeCurrentLine(nextLine);
-      
-      displayedLines.value.push(nextLine);
-      currentLineDisplay.value = '';
-      
-      isTyping.value = false;
-      isWaiting.value = true;
-    }
+    await processLines(newLines);
   } finally {
     processingQueue.value = false;
     emit('finishTyping');
   }
 }, { deep: true });
 
-const typeCurrentLine = async (line) => {
-  currentLineDisplay.value = '';
-  for (let i = 0; i < line.length; i++) {
-    currentLineDisplay.value = line.slice(0, i + 1);
-    await new Promise(resolve => setTimeout(resolve, props.typingSpeed));
+const processLines = async (newLines) => {
+  while (displayedLines.value.length < newLines.length) {
+    const nextLineIndex = displayedLines.value.length;
+    currentLineText.value = newLines[nextLineIndex];
+    currentIndex.value = 0;
+    startTime.value = Date.now();
+    
+    await typeCurrentLine();
   }
+};
+
+const typeCurrentLine = () => {
+  return new Promise((resolve) => {
+    const processCharacter = () => {
+      const now = Date.now();
+      const elapsedTime = now - startTime.value;
+      const charactersToShow = Math.floor(elapsedTime / props.typingSpeed);
+      
+      if (charactersToShow > currentIndex.value) {
+        currentIndex.value = Math.min(charactersToShow, currentLineText.value.length);
+        if (!isHidden.value) {
+          // Only update visual display if tab is visible
+          currentLineDisplay.value = currentLineText.value.slice(0, currentIndex.value);
+        }
+      }
+      
+      if (currentIndex.value >= currentLineText.value.length) {
+        displayedLines.value.push(currentLineText.value);
+        currentLineDisplay.value = '';
+        currentLineText.value = '';
+        resolve();
+        return;
+      }
+      
+      setTimeout(processCharacter, 16); // Roughly 60fps
+    };
+    
+    processCharacter();
+  });
 };
 </script>
 
@@ -105,23 +158,5 @@ const typeCurrentLine = async (line) => {
 
 .message > div {
   min-height: 1.2em;
-}
-
-.cursor {
-  display: inline-block;
-  width: 2px;
-  background-color: currentColor;
-  margin-left: 1px;
-  height: 1em;
-  vertical-align: text-bottom;
-}
-
-.cursor-blink {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  from, to { opacity: 1; }
-  50% { opacity: 0; }
 }
 </style>

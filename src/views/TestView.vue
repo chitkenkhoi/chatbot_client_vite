@@ -16,7 +16,7 @@
 <script>
 import { ref } from "vue"
 import StreamingResponse from "@/components/StreamingResponse.vue"
-export default({
+export default{
     name: "TestView",
     components: {
         StreamingResponse
@@ -35,7 +35,7 @@ export default({
             handleClicked
         }
     }
-})
+}
 
 </script>
 

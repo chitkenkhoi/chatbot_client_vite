@@ -61,7 +61,7 @@ export default {
   components: {
     DropDown,
   },
-  setup() {
+  setup(_,emit) {
     const chatStore = useChatStore();
     const state = reactive({
       email: "",
@@ -77,10 +77,10 @@ export default {
         console.error(error);
       }
     };
-    onBeforeMount(() => {
-      loadData();
+    onBeforeMount(async () => {
+      await loadData();
       state.email = localStorage.getItem("userEmail");
-      console.log("Sidebar mounted");
+      emit('finish-loading')
     });
     return {
       state,

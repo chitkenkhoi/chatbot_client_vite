@@ -333,6 +333,8 @@
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.2s;
+    font-family: "Baloo Paaji 2", sans-serif;
+    font-weight: 500;
   }
   
   .logout-button:hover {

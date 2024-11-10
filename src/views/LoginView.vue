@@ -160,7 +160,6 @@ export default {
     }
     onBeforeMount(async () => {
       await checkAuthStatus()
-      await sleep(1000)
     })
     return {
       state,

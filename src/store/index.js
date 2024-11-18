@@ -5,10 +5,17 @@ export const useChatStore = defineStore('chat', {
     topic : [], // Store chat topics
     currentChatId: null,
     isConnected: false,
+    file: new Map(),
     mode : "1"
   }),
 
   actions: {
+    setFile(chatId,file,cid){
+      this.file.set(chatId,{file:file,cid:cid})
+    },
+    clearFile(chatId){
+      this.file.delete(chatId)
+    },
     resetState(){
       this.$reset();
     },

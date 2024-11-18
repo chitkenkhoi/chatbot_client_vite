@@ -26,6 +26,7 @@
             :src="message.isUser ? '/human_avatar.webp' : '/avatar.webp'"
           />
           <div class="content" :class="{ isuser: message.isUser }">
+            <img v-if="message.cid" :src="`https://magenta-known-swan-641.mypinata.cloud/ipfs/${message.cid}`"  class = "imageAttached" />
             <StreamingResponse
               :typingSpeed="5"
               :enableTyping="message.isTyping? true : false"
@@ -205,6 +206,10 @@ export default {
   overflow-y: auto;
   background-color: #f5f5f5;
   scroll-behavior: smooth;
+}
+.imageAttached{
+ max-width: 100%;
+  max-height: 100%;
 }
 .message {
   display: flex;

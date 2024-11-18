@@ -1,6 +1,9 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="form-group">
+      <div class = "image" @click = "toggleImageUpload"><span class="material-symbols-outlined">
+image
+</span></div>
       <input
         v-model="message"
         type="text"
@@ -22,12 +25,11 @@ import { ref,watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useChatStore } from "../store/index.js";
 export default {
-  setup() {
+  setup(_,{emit}) {
     const route = useRoute();
     const router = useRouter();
     const chatStore = useChatStore();
     const message = ref("");
-
     const sendMessage = async () => {
       if (!message.value.trim()) return;
 
@@ -38,6 +40,16 @@ export default {
         if (route.name === "new") {
           // Case 1: New conversation
           const params = new URLSearchParams();
+          const message = {
+            content: messageContent,
+            isUser: true,
+          }
+          if (chatStore.file.has("new")){
+            params.append("cid",chatStore.file.get("new").cid);
+            message.cid = chatStore.file.get("new").cid;
+            chatStore.clearFile("new");
+            emit("clearfile")
+          }
           params.append("message", messageContent);
           params.append("mode",chatStore.mode)
           const response = await axiosInstance.post(
@@ -50,20 +62,27 @@ export default {
             }
           );
           const chatId = response.data.cid;
-          chatStore.addMessage(chatId, {
-            content: messageContent,
-            isUser: true,
-          });
+          
+          chatStore.addMessage(chatId, message);
           chatStore.setTopic(chatId,"");
           router.push(`/chat/${chatId}`);
         } else {
           // Case 2: Existing conversation
-          chatStore.addMessage(route.params.id, {
+          const message = {
             content: messageContent,
             isUser: true,
-          });
+          }
+          
           const params = new URLSearchParams();
           params.append("message", messageContent);
+          if (chatStore.file.has(route.params.id)){
+            params.append("cid",chatStore.file.get(route.params.id).cid);
+            message.cid = chatStore.file.get(route.params.id).cid;
+            chatStore.clearFile(route.params.id);
+            emit("clearfile")
+          }
+          console.log(message)  
+          chatStore.addMessage(route.params.id, message);
           const response = await axiosInstance.post(
             `/conversation/${route.params.id}`,
             params,
@@ -91,9 +110,14 @@ export default {
       },
       { flush: "post" }
     );
+
+    const toggleImageUpload = () => {
+      emit("toggle-image-upload");
+    };
     return {
       message,
       sendMessage,
+      toggleImageUpload,
     };
   },
 };
@@ -122,6 +146,22 @@ export default {
 .ask:focus {
   outline: none;
   border: 1px solid #ccc;
+}
+.image{
+  /* width: 10%;
+  height: 100%; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+  position: fixed;
+  left: 23%;
+  color: #2c3e50;
+  cursor: pointer;
+}
+.image :hover{
+  color: #bc8f8f;
+  
 }
 .submit {
   position: fixed;

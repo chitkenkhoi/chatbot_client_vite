@@ -1,38 +1,20 @@
 <template>
-    <div>
-        This is testview
-
-    </div>
-    <input v-model="data"/>
-    <StreamingResponse
-              :typingSpeed="50"
-              :enableTyping="true"
-              :content="'abc'"
-              :streamedLines="realData"
-            />
-    <button class = "btn" @click = "handleClicked" > This is button</button>
+    <FileUpload v-if="a" />
+    <ImageUpload v-if="!a"/>
 </template>
 
 <script>
-import { ref } from "vue"
-import StreamingResponse from "@/components/StreamingResponse.vue"
+import FileUpload from "@/components/FileUpload.vue"
+import ImageUpload from "@/components/ImageUpload.vue"
 export default{
     name: "TestView",
     components: {
-        StreamingResponse
+        FileUpload,
+        ImageUpload
     },
     setup() {
-        const data = ref([])
-        const realData = ref([])
-        const handleClicked = () => {
-            realData.value.push(data.value)
-            data.value = ""
-        }
-        return {
-            data,
-            realData,
-            handleClicked
-        }
+        const a = true
+        return {a}
     }
 }
 

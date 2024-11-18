@@ -61,7 +61,7 @@ export default {
   components: {
     DropDown,
   },
-  setup(_,emit) {
+  setup(_,{emit}) {
     const chatStore = useChatStore();
     const state = reactive({
       email: "",

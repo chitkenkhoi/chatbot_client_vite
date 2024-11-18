@@ -81,7 +81,6 @@ export default {
             chatStore.clearFile(route.params.id);
             emit("clearfile")
           }
-          console.log(message)  
           chatStore.addMessage(route.params.id, message);
           const response = await axiosInstance.post(
             `/conversation/${route.params.id}`,

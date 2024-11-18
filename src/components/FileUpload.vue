@@ -157,7 +157,6 @@ const uploadFile = async () => {
   pinataGateway: "https://magenta-known-swan-641.mypinata.cloud",
 });
   const upload = await pinata.upload.file(selectedFile.value);
-  console.log(upload.IpfsHash)
   if (route.name === "new"){
     chatStore.setFile("new",selectedFile.value,upload.IpfsHash)
   }else{

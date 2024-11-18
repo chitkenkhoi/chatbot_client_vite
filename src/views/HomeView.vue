@@ -96,7 +96,6 @@ export default defineComponent({
         return;
       }
       showImageUpload.value = !showImageUpload.value;
-      console.log(showImageUpload.value);
     };
     const sleep = (ms) => {
       return new Promise((resolve) => setTimeout(resolve, ms));

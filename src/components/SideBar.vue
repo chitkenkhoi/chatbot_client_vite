@@ -13,9 +13,9 @@
     </div>
     <div class="sidebar-foot">
       <div class="header">Tài khoản</div>
-      <DropDown class = "dropdown" :email="state.email"/>
+      <DropDown class="dropdown" :email="state.email" />
     </div>
-    
+
     <div class="sidebar-body">
       <div class="tittle">Gần đây</div>
       <div class="menuitems">
@@ -27,28 +27,62 @@
           class="side-btn"
           :class="{ focused: $route.params.id === chat.id }"
         >
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon1" viewBox="0 0 24 24" fill="none" stroke="currentColor" v-if="chat?.mode!=='1'">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon1" viewBox="0 0 24 24" fill="none" stroke="currentColor"  v-if="chat?.mode==='1'">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v7"/>
-            </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon1"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            v-if="chat?.mode !== '1'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+            />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon1"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            v-if="chat?.mode === '1'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 14l9-5-9-5-9 5 9 5z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 14l9-5-9-5-9 5 9 5z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 14v7"
+            />
+          </svg>
           <!-- <span class="material-symbols-outlined"> contact_support </span> -->
           <div class="link-container">{{ chat.topic }}</div>
         </router-link>
       </div>
-      <div class="tittle" id="viewall" @click = "$router.push('/conversations')">
+      <div class="tittle" id="viewall" @click="$router.push('/conversations')">
         Xem tất cả
         <span class="material-symbols-outlined" id="arr"> arrow_forward </span>
       </div>
     </div>
-    
+
     <div class="help">
-          <span class="material-symbols-outlined" id ="info"> info </span>
-          <div class="support"> Help & Support</div>
-        </div>
+      <span class="material-symbols-outlined" id="info"> info </span>
+      <div class="support">Help & Support</div>
+    </div>
   </div>
 </template>
 
@@ -61,7 +95,7 @@ export default {
   components: {
     DropDown,
   },
-  setup(_,{emit}) {
+  setup(_, { emit }) {
     const chatStore = useChatStore();
     const state = reactive({
       email: "",
@@ -80,7 +114,7 @@ export default {
     onBeforeMount(async () => {
       await loadData();
       state.email = localStorage.getItem("userEmail");
-      emit('finish-loading')
+      emit("finish-loading");
     });
     return {
       state,
@@ -136,7 +170,7 @@ export default {
   align-items: center;
   color: #bc8f8f;
 }
-.icon1{
+.icon1 {
   width: 10%;
   height: 100%;
   display: flex;
@@ -157,19 +191,20 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
 }
 .menuitems {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 60%;
+  height: 80%;
   justify-content: flex-start;
   align-items: center;
 }
 .side-btn {
   margin-top: 1%;
   width: 100%;
-  height: 12%;
+  height: 10%;
   max-height: 30px;
   display: flex;
   flex-direction: row;
@@ -183,10 +218,10 @@ export default {
   text-decoration: none;
   border-radius: 5px;
 }
-.avatar{
+.avatar {
   width: 15%;
   height: 67%;
-  border-radius:50%;
+  border-radius: 50%;
   opacity: 100;
 }
 .side-btn:hover {
@@ -201,9 +236,8 @@ export default {
   text-align: left;
   margin-top: 2%;
 }
-.dropdown{
-  margin-top:10%;
-
+.dropdown {
+  margin-top: 10%;
 }
 #viewall {
   display: flex;
@@ -224,7 +258,7 @@ export default {
 }
 #arr {
   font-size: 15px;
-} 
+}
 .sidebar-foot {
   width: 95%;
   height: 20%;
@@ -247,46 +281,49 @@ export default {
   text-align: left;
   margin-top: 2%;
 }
-.account{
-  margin-top:20px;
+.account {
+  margin-top: 20px;
   width: 80%;
   height: 30%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  background: linear-gradient(to bottom, rgba(34, 34, 34, 0) 0%, rgba(34, 34, 34, 0.4) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(34, 34, 34, 0) 0%,
+    rgba(34, 34, 34, 0.4) 100%
+  );
   opacity: 0.7;
   transition: opacity 0.2s ease-in-out;
-  border:1px solid lightgray;
+  border: 1px solid lightgray;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
-  cursor:pointer;
+  cursor: pointer;
   border-radius: 10px;
 }
-.account:hover{
+.account:hover {
   opacity: 1;
 }
-.last{
+.last {
   width: 80%;
   height: 15%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  
 }
-.help{
-  position:absolute;
+.help {
+  position: absolute;
   bottom: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  width:50%;
+  width: 50%;
   justify-content: space-evenly;
-  font-size:13px;
-  font-weight: 400  ;
+  font-size: 13px;
+  font-weight: 400;
 }
-#info{
+#info {
   font-size: 13px;
 }
 </style>

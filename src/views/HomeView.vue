@@ -23,7 +23,7 @@
     </div>
     <div
       class="imageContainer"
-      v-if="  
+      v-if="
         (this.$route.name === 'new' && chatStore.file.has('new')) ||
         chatStore.file.has(this.$route.params.id)
       "
@@ -208,8 +208,8 @@ export default defineComponent({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50%;
-  height: 50%;
+  width: 70%;
+  height: 70%;
   background-color: white;
   z-index: 1001;
   border-radius: 10px;
